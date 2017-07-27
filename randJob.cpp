@@ -52,7 +52,7 @@ int main() {
     if (exists(p) && is_directory(p)) {
       //! Variables
       bool                        newVid  = false;
-      int                         random, i = 1, count = 0;
+      int                         random, i = 1;
       std::size_t                 found1, found2;
       std::string                 wanted1(".mp4");
       std::string                 wanted2(".flv");
@@ -115,8 +115,6 @@ int main() {
         //! Breaks loop if randomly picked video hasn't been played previously
         if (std::find(played.begin(), played.end(), randFile) == played.end())
           newVid  = true;
-        else
-          count++;
       } while (newVid == false);
 
       fp  = std::fopen("mano.job", "a+");
