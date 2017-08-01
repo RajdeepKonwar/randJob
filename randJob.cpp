@@ -140,13 +140,13 @@ int main() {
 
         for( iterS = wantedExts.begin(); iterS != wantedExts.end(); ++iterS ) {
           if ( ext == *iterS ) {
-            skipFlag  = true;
+            skipFlag  = false;
             break;
           }
         }
 
         //! Skips if random pick doesn't contain any wanted extensions
-        if( skipFlag == false )
+        if( skipFlag == true )
           continue;
 
         string randFile( f.string() );
