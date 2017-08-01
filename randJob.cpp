@@ -51,38 +51,64 @@ int main() {
   try {
     if( exists( p ) && is_directory( p ) ) {
       //! Variables
-      bool        newVid  = false;
-      int         random, i = 1;
-      std::size_t found1, found2, found3;
-      std::string wanted1( ".flv" );
-      std::string wanted2( ".mov" );
-      std::string wanted3( ".mp4" );
-      std::string line;
-      FILE        *fp;
+      bool                          skipFlag, newVid  = false;
+      int                           random, i = 1;
+      std::size_t                   found;
+      std::string                   line;
+      FILE                          *fp;
 
       //! libVLC objects
-      libvlc_instance_t     *inst;
-      libvlc_media_player_t *mp;
-      libvlc_media_t        *m;
+      libvlc_instance_t             *inst;
+      libvlc_media_player_t         *mp;
+      libvlc_media_t                *m;
 
       //! STLs
       std::vector< path >           allFiles, files;
-      std::vector< path >::iterator iter;
       std::vector< std::string >    played;
+      std::vector< std::string >    wantedExts;
+      std::vector< path >::iterator iterP;
+      std::vector< std::string >::iterator
+                                    iterS;
+
+      //! Populating vector with wanted extensions to play
+      wantedExts.push_back( ".avi" );
+      wantedExts.push_back( ".AVI" );
+      wantedExts.push_back( ".dat" );
+      wantedExts.push_back( ".DAT" );
+      wantedExts.push_back( ".flv" );
+      wantedExts.push_back( ".FLV" );
+      wantedExts.push_back( ".mkv" );
+      wantedExts.push_back( ".MKV" );
+      wantedExts.push_back( ".mov" );
+      wantedExts.push_back( ".MOV" );
+      wantedExts.push_back( ".mp4" );
+      wantedExts.push_back( ".MP4" );
+      wantedExts.push_back( ".mpeg" );
+      wantedExts.push_back( ".MPEG" );
+      wantedExts.push_back( ".mpg" );
+      wantedExts.push_back( ".MPG" );
+      wantedExts.push_back( ".vob" );
+      wantedExts.push_back( ".VOB" );
+      wantedExts.push_back( ".webm" );
+      wantedExts.push_back( ".WEBM" );
+      wantedExts.push_back( ".wmv" );
+      wantedExts.push_back( ".WMV" );
 
       //! Gets all files and stores into a vector from the currect directory
       copy( directory_iterator( p ), directory_iterator(), back_inserter( allFiles ) );
       sort( allFiles.begin(), allFiles.end() );
 
-      //! Push all the video files (containing .mp4 or .flv) into another vector
-      for( iter = allFiles.begin(); iter != allFiles.end(); ++iter ) {
-        std::string temp( (*iter).string() );
-        found1  = temp.find( wanted1 );
-        found2  = temp.find( wanted2 );
-        found3  = temp.find( wanted3 );
+      for( iterP = allFiles.begin(); iterP != allFiles.end(); ++iterP ) {
+        std::string filePath( (*iterP).string() );
 
-        if( found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos ) {
-          files.push_back( *iter );
+        for( iterS = wantedExts.begin(); iterS != wantedExts.end(); ++iterS ) {
+          found = filePath.find( *iterS );
+
+          //! Push all the video files containing wanted extensions into another vector
+          if ( found != std::string::npos ) {
+            files.push_back( *iterP );
+            break;
+          }
         }
       }
 
@@ -105,15 +131,26 @@ int main() {
       do {
         //! Picks a random video
         srand( (unsigned)time( NULL ) );
-        random = rand() % files.size();
-        path f = files.at( random );
+        random    = rand() % files.size();
+        path f    = files.at( random );
+        skipFlag  = true;
 
         //! Repicks if file does not contain .mp4 and .flv
-        std::string ext{f.extension().string()};
-        if( ext != ".flv" && ext != ".mov" && ext != ".mp4" )
+        std::string ext( f.extension().string() );
+
+        for( iterS = wantedExts.begin(); iterS != wantedExts.end(); ++iterS ) {
+          if ( ext == *iterS ) {
+            skipFlag  = true;
+            break;
+          }
+        }
+
+        //! Skips if random pick doesn't contain any wanted extensions
+        if( skipFlag == false )
           continue;
 
         std::string randFile( f.string() );
+
         //! Breaks loop if randomly picked video hasn't been played previously
         if( std::find(played.begin(), played.end(), randFile) == played.end() )
           newVid  = true;
