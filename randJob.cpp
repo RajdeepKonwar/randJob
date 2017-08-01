@@ -43,6 +43,7 @@
 #include <vlc/vlc.h>
 
 using namespace boost::filesystem;
+using namespace std;
 
 int main() {
   //! Sets path to the current directory
@@ -51,24 +52,23 @@ int main() {
   try {
     if( exists( p ) && is_directory( p ) ) {
       //! Variables
-      bool                          skipFlag, newVid  = false;
-      int                           random, i = 1;
-      std::size_t                   found;
-      std::string                   line;
-      FILE                          *fp;
+      bool                        skipFlag, newVid  = false;
+      int                         random, i = 1;
+      size_t                      found;
+      string                      line;
+      FILE                        *fp;
 
       //! libVLC objects
-      libvlc_instance_t             *inst;
-      libvlc_media_player_t         *mp;
-      libvlc_media_t                *m;
+      libvlc_instance_t           *inst;
+      libvlc_media_player_t       *mp;
+      libvlc_media_t              *m;
 
       //! STLs
-      std::vector< path >           allFiles, files;
-      std::vector< std::string >    played;
-      std::vector< std::string >    wantedExts;
-      std::vector< path >::iterator iterP;
-      std::vector< std::string >::iterator
-                                    iterS;
+      vector< path >              allFiles, files;
+      vector< string >            played;
+      vector< string >            wantedExts;
+      vector< path >::iterator    iterP;
+      vector< string >::iterator  iterS;
 
       //! Populating vector with wanted extensions to play
       wantedExts.push_back( ".avi" );
@@ -99,13 +99,13 @@ int main() {
       sort( allFiles.begin(), allFiles.end() );
 
       for( iterP = allFiles.begin(); iterP != allFiles.end(); ++iterP ) {
-        std::string filePath( (*iterP).string() );
+        string filePath( (*iterP).string() );
 
         for( iterS = wantedExts.begin(); iterS != wantedExts.end(); ++iterS ) {
           found = filePath.find( *iterS );
 
           //! Push all the video files containing wanted extensions into another vector
-          if ( found != std::string::npos ) {
+          if ( found != string::npos ) {
             files.push_back( *iterP );
             break;
           }
@@ -113,9 +113,9 @@ int main() {
       }
 
       //! Reads mano.job to get previously played videos
-      std::ifstream inFile( "mano.job" );
+      ifstream inFile( "mano.job" );
       if( inFile ) {
-        while( std::getline( inFile, line ) ) {
+        while( getline( inFile, line ) ) {
           played.push_back( line );
         }
 
@@ -124,7 +124,7 @@ int main() {
 
       //! Exits program when all videos watched!
       if( played.size() == files.size() ) {
-        std::cout << "No new video found! Delete mano.job\n";
+        cout << "No new video found! Delete mano.job\n";
         exit( EXIT_FAILURE );
       }
 
@@ -136,7 +136,7 @@ int main() {
         skipFlag  = true;
 
         //! Repicks if file does not contain .mp4 and .flv
-        std::string ext( f.extension().string() );
+        string ext( f.extension().string() );
 
         for( iterS = wantedExts.begin(); iterS != wantedExts.end(); ++iterS ) {
           if ( ext == *iterS ) {
@@ -149,16 +149,16 @@ int main() {
         if( skipFlag == false )
           continue;
 
-        std::string randFile( f.string() );
+        string randFile( f.string() );
 
         //! Breaks loop if randomly picked video hasn't been played previously
-        if( std::find(played.begin(), played.end(), randFile) == played.end() )
+        if( find(played.begin(), played.end(), randFile) == played.end() )
           newVid  = true;
       } while( newVid == false );
 
-      fp  = std::fopen( "mano.job", "a+" );
+      fp  = fopen( "mano.job", "a+" );
       if( !fp ) {
-        std::cout << "Cannot open mano.job in append mode!\n";
+        cout << "Cannot open mano.job in append mode!\n";
         exit( EXIT_FAILURE );
       }
 
@@ -167,7 +167,7 @@ int main() {
       fclose( fp );
 
       //! Displays video info
-      std::cout << "Now playing: " << files.at( random ).c_str() << std::endl;
+      cout << "Now playing: " << files.at( random ).c_str() << endl;
 
       //! Loads the VLC engine
       inst  = libvlc_new( 0, NULL );
@@ -198,11 +198,11 @@ int main() {
       libvlc_release( inst );
     }
     else
-      std::cout << p << " does not exist\n";
+      cout << p << " does not exist\n";
   }
 
   catch( const filesystem_error& ex ) {
-    std::cout << ex.what() << std::endl;;
+    cout << ex.what() << endl;;
   }
 
   return 0;
