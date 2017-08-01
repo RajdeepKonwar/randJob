@@ -53,9 +53,10 @@ int main() {
       //! Variables
       bool        newVid  = false;
       int         random, i = 1;
-      std::size_t found1, found2;
-      std::string wanted1( ".mp4" );
-      std::string wanted2( ".flv" );
+      std::size_t found1, found2, found3;
+      std::string wanted1( ".flv" );
+      std::string wanted2( ".mov" );
+      std::string wanted3( ".mp4" );
       std::string line;
       FILE        *fp;
 
@@ -78,8 +79,9 @@ int main() {
         std::string temp( (*iter).string() );
         found1  = temp.find( wanted1 );
         found2  = temp.find( wanted2 );
+        found3  = temp.find( wanted3 );
 
-        if( found1 != std::string::npos || found2 != std::string::npos ) {
+        if( found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos ) {
           files.push_back( *iter );
         }
       }
@@ -108,7 +110,7 @@ int main() {
 
         //! Repicks if file does not contain .mp4 and .flv
         std::string ext{f.extension().string()};
-        if( ext != ".mp4" && ext != ".flv" )
+        if( ext != ".flv" && ext != ".mov" && ext != ".mp4" )
           continue;
 
         std::string randFile( f.string() );
@@ -127,7 +129,7 @@ int main() {
       fprintf( fp, "%s\n", files.at( random ).c_str() );
       fclose( fp );
 
-      //! Video info
+      //! Displays video info
       std::cout << "Now playing: " << files.at( random ).c_str() << std::endl;
 
       //! Loads the VLC engine
@@ -142,7 +144,7 @@ int main() {
       //! No need to keep the media now
       libvlc_media_release( m );
 
-      //! plays the media player
+      //! Plays the media player
       libvlc_media_player_play( mp );
 
       //! Infinite loop to keep media player running
