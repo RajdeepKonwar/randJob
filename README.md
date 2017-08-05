@@ -1,5 +1,5 @@
 # randJob
-Launches a random mp4/flv video file from the current working directory (provided the directory contains video files) using the Open Source video framework [libVLC](https://wiki.videolan.org/LibVLC/) with book-keeping of played videos and excluding previously-played videos from the randomizer pool.
+Launches a random video file from the current working directory (provided the directory contains video files) using the Open Source video framework [libVLC](https://wiki.videolan.org/LibVLC/) with book-keeping of played videos and excluding previously-played videos from the randomizer pool.
 
 ### Requirements
 1. gcc version 6.3.0 or higher (thank me later for upgrading your gcc)
