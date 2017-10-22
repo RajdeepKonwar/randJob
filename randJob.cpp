@@ -113,7 +113,7 @@ int main() {
       }
 
       //! Reads mano.job to get previously played videos
-      ifstream inFile( "mano.job" );
+      std::ifstream inFile( "mano.job" );
       if( inFile ) {
         while( getline( inFile, line ) ) {
           played.push_back( line );
