@@ -1,4 +1,6 @@
 # randJob
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRajdeepKonwar%2FrandJob.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FRajdeepKonwar%2FrandJob?ref=badge_shield)
+
 Launches a random video file from the current working directory (provided the directory contains video files) using the Open Source video framework [libVLC](https://wiki.videolan.org/LibVLC/) with book-keeping of played videos and excluding previously-played videos from the randomizer pool.
 
 ### Requirements
@@ -28,3 +30,7 @@ g++ randJob.cpp -o randJob -lboost_system -lboost_filesystem -lvlc
 ```
 ./randJob
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRajdeepKonwar%2FrandJob.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FRajdeepKonwar%2FrandJob?ref=badge_large)
